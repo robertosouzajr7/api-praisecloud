@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import grupo from "../models/GroupModel.js";
+import Grupo from "../models/GroupModel.js"; // Certifique-se de usar a importação correta
 
 export const createGroup = async (data) => {
   const { senha } = data;
@@ -11,11 +11,11 @@ export const createGroup = async (data) => {
     ...data,
     senha: hashPassword,
   };
-  const novoGrupo = new grupo({
+  const novoGrupo = new Grupo({
     ...user,
   });
   await novoGrupo.save();
-  const grupoSaved = await grupo.findById(user._id, "-senha");
+  const grupoSaved = await Grupo.findById(novoGrupo._id).select("-senha");
   return grupoSaved;
 };
 
@@ -23,7 +23,7 @@ export const createGroup = async (data) => {
 
 export const loginAdmin = async (email, senha) => {
   // Procure o usuário pelo email
-  const findUser = await grupo.findOne({ email });
+  const findUser = await Grupo.findOne({ email });
   if (!findUser) {
     throw new Error("Usuário ou senha não encontrado");
   }
@@ -50,20 +50,27 @@ export const loginAdmin = async (email, senha) => {
 };
 
 export const getGroupByID = async (id) => {
-  const grupo = await grupo.findById(id);
+  const grupo = await Grupo.findById(id);
+
+  if (!grupo) {
+    throw new Error("Grupo não encontrado");
+  }
+
   return grupo;
 };
 
 export const updateGrupo = async (id, data) => {
-  const grupo = await grupo.findByIdAndUpdate(id, data, { new: true });
+  console.log(id, data);
+  const grupo = await Grupo.findByIdAndUpdate(id, data, { new: true });
   return grupo;
 };
 
 export const deleteGrupo = async (id) => {
-  const grupo = await grupo.findByIdAndDelete(id);
-  return grupo;
+  await Grupo.findByIdAndDelete(id);
+  return null;
 };
 
 export const getAllGroups = async () => {
-  const grupos = await grupo.find().select("-senha");
+  const grupos = await Grupo.find().select("-senha");
+  return grupos;
 };

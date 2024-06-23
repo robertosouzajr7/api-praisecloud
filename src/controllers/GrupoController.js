@@ -48,7 +48,8 @@ export const deleteGrupoController = async (req, res) => {
 
 export const updateGrupoController = async (req, res) => {
   try {
-    const { id } = req.params;
+    console.log(req.body);
+    const id = req.params.id;
     const grupo = await updateGrupo(id, req.body);
     res.status(200).json(grupo);
   } catch (error) {

@@ -9,7 +9,7 @@ import postRouter from "./routes/PostsRouter.js";
 import musicasRouter from "./routes/MusicasRouter.js";
 import agendaRouter from "./routes/AgendaRouter.js";
 import dotenv from "dotenv";
-
+dotenv.config();
 import cors from "cors";
 
 const app = express();
@@ -40,7 +40,6 @@ app.use("/musica", musicasRouter);
 
 app.use("/agenda", agendaRouter);
 
-dotenv.config();
 const PORT = process.env.PORT || 5000;
 
 mongoose.connect(process.env.DATABASE_URL);

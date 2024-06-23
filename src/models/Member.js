@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 
 // Model para Cadastrar membros
 
-const memberSchema = new mongoose.Schema({
+export const memberSchema = new mongoose.Schema({
   nome: {
     type: String,
     required: true,
@@ -68,8 +68,9 @@ const memberSchema = new mongoose.Schema({
   grupo: {
     type: Schema.Types.ObjectId,
     ref: "Grupo",
+    required: true,
   },
 });
-const membro = mongoose.model("Membro", memberSchema);
+const Membro = mongoose.model("Membro", memberSchema);
 
-export default membro;
+export default Membro;

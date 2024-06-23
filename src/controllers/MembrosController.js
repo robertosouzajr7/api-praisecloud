@@ -65,6 +65,7 @@ export const deleteMembroController = async (req, res) => {
 
 // Controller de Buscar todos os Membros pelo Id do grupo
 
+// Controller de Buscar todos os Membros pelo Id do grupo
 export const getAllMembrosByGroupIDController = async (req, res) => {
   try {
     const membros = await getAllMembrosByGroupID(req.params.id);

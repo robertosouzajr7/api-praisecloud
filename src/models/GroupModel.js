@@ -1,5 +1,4 @@
 import mongoose, { Schema } from "mongoose";
-
 // Model para Criar Grupo
 
 const GrupoSchema = new mongoose.Schema({
@@ -62,6 +61,6 @@ const GrupoSchema = new mongoose.Schema({
   ],
 });
 
-const grupo = mongoose.model("Grupo", GrupoSchema);
+const Grupo = mongoose.model("Grupo", GrupoSchema);
 
-export default grupo;
+export default Grupo;
