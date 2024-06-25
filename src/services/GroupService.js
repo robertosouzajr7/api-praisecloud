@@ -66,8 +66,11 @@ export const updateGrupo = async (id, data) => {
 };
 
 export const deleteGrupo = async (id) => {
-  await Grupo.findByIdAndDelete(id);
-  return null;
+  const grupo = await Grupo.findByIdAndDelete(id);
+  if (!grupo) {
+    throw new Error("Grupo não encontrado");
+  }
+  return grupo; // Retornar o grupo deletado
 };
 
 export const getAllGroups = async () => {

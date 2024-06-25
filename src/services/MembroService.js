@@ -15,8 +15,7 @@ export const createMembro = async (data) => {
   const newMembro = new Membro(newuser);
   await newMembro.save();
 
-  // adcionar ao grupo
-
+  // Adicionar ao grupo
   const grupo = await Grupo.findById(data.grupo);
   if (!grupo) {
     throw new Error("Grupo não encontrado!");
@@ -29,7 +28,6 @@ export const createMembro = async (data) => {
 };
 
 //Login de Membro
-
 export const loginMembro = async (email, senha) => {
   const user = await Membro.findOne({ email });
   if (!user) {
@@ -54,28 +52,42 @@ export const loginMembro = async (email, senha) => {
 
 //Pegar todos os dados do membro pelo Id
 export const getMembroById = async (id) => {
-  const user = await Membro.findById(id);
+  const user = await Membro.findById(id).select("-senha");
   return user;
 };
 
 //Pegar todos os Membros cadastrados no grupo
 export const getAllMembrosByGroupID = async (idGrupo) => {
-  const grupo = await Grupo.findById(idGrupo);
-  console.log(grupo);
+  const grupo = await Grupo.findById(idGrupo).populate({
+    path: "membros",
+    model: "Membro",
+    select: "-senha",
+  });
   if (!grupo) {
     throw new Error("Grupo não encontrado");
   }
-  return grupo; // Retorna os membros populados
+  return grupo.membros; // Retorna os membros populados
 };
 
 //Atualizar os dados de um membro
 export const updateMembro = async (idMembro, data) => {
-  const user = await Membro.findByIdAndUpdate(idMembro, data);
+  const user = await Membro.findByIdAndUpdate(idMembro, data, { new: true });
   return user;
 };
 
 //Deletar um membro
 export const deleteMembro = async (idMembro) => {
-  const user = await Membro.findByIdAndDelete(idMembro);
-  return user;
+  const membro = await Membro.findByIdAndDelete(idMembro);
+  if (!membro) {
+    throw new Error("Membro não encontrado");
+  }
+
+  // Remover membro do grupo
+  const grupo = await Grupo.findById(membro.grupo);
+  if (grupo) {
+    grupo.membros.pull(membro._id);
+    await grupo.save();
+  }
+
+  return membro;
 };

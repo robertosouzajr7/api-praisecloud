@@ -8,7 +8,6 @@ import {
 } from "../services/MembroService.js";
 
 //Controller de Criar membro
-
 export const createMembroController = async (req, res) => {
   try {
     const membro = await createMembro(req.body);
@@ -19,7 +18,6 @@ export const createMembroController = async (req, res) => {
 };
 
 // Controller de Login do membro
-
 export const loginMembroController = async (req, res) => {
   try {
     const { email, senha } = req.body;
@@ -31,10 +29,10 @@ export const loginMembroController = async (req, res) => {
 };
 
 //Controller de Buscar membro pelo Id
-
 export const getMembroByIdController = async (req, res) => {
   try {
-    const membro = await getMembroById(req.params.id);
+    const { idMembro } = req.params;
+    const membro = await getMembroById(idMembro);
     res.status(200).json(membro);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -42,10 +40,10 @@ export const getMembroByIdController = async (req, res) => {
 };
 
 //Controller de Atualizar membro
-
 export const updateMembroController = async (req, res) => {
   try {
-    const membro = await updateMembro(req.params.id, req.body);
+    const { idMembro } = req.params;
+    const membro = await updateMembro(idMembro, req.body);
     res.status(200).json(membro);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -53,10 +51,10 @@ export const updateMembroController = async (req, res) => {
 };
 
 //Controller de Deletar membro
-
 export const deleteMembroController = async (req, res) => {
   try {
-    const membro = await deleteMembro(req.params.id);
+    const { idMembro } = req.params;
+    const membro = await deleteMembro(idMembro);
     res.status(200).json(membro);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -64,11 +62,10 @@ export const deleteMembroController = async (req, res) => {
 };
 
 // Controller de Buscar todos os Membros pelo Id do grupo
-
-// Controller de Buscar todos os Membros pelo Id do grupo
 export const getAllMembrosByGroupIDController = async (req, res) => {
   try {
-    const membros = await getAllMembrosByGroupID(req.params.id);
+    const { idGrupo } = req.params;
+    const membros = await getAllMembrosByGroupID(idGrupo);
     res.status(200).json(membros);
   } catch (error) {
     res.status(400).json({ message: error.message });
