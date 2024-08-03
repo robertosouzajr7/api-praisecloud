@@ -1,76 +1,71 @@
-import mongoose, { Schema } from "mongoose";
+import { DataTypes } from "sequelize";
+import sequelize from "../config/database.js";
+import Group from "./GroupModel.js";
 
-// Model para Cadastrar membros
-
-export const memberSchema = new mongoose.Schema({
-  nome: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-  },
-  telefone: {
-    type: String,
-    required: true,
-  },
-  senha: {
-    type: String,
-    required: true,
-  },
-
-  imgPerfil: {
-    type: String,
-  },
-
-  meusKits: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Kit",
+const Member = sequelize.define(
+  "Member",
+  {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
     },
-  ],
-
-  nascimento: {
-    type: Date,
-    required: true,
-  },
-
-  nipe: {
-    type: String,
-    enum: ["Soprano", "Contralto", "Mezzo", "Tenor", "Barítono", "Baixo"],
-  },
-
-  cargo: {
-    type: String,
-    enum: ["Direção", "Membro", "Banda", "Staff"],
-  },
-
-  isAdmin: {
-    type: Boolean,
-    default: false,
-  },
-
-  mensalidades: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Mensalidade",
+    nome: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
-  ],
-
-  agenda: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Agenda",
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
     },
-  ],
-
-  grupo: {
-    type: Schema.Types.ObjectId,
-    ref: "Grupo",
-    required: true,
+    telefone: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    senha: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    imgPerfil: {
+      type: DataTypes.STRING,
+    },
+    nascimento: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    nipe: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        isIn: [["Soprano", "Contralto", "Mezzo", "Tenor", "Barítono", "Baixo"]],
+      },
+    },
+    cargo: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        isIn: [["Direção", "Membro", "Banda", "Staff"]],
+      },
+    },
+    isAdmin: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    grupoId: {
+      type: DataTypes.UUID,
+      references: {
+        model: Group,
+        key: "id",
+      },
+      allowNull: false,
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    },
   },
-});
-const Membro = mongoose.model("Membro", memberSchema);
+  {
+    timestamps: true,
+  }
+);
 
-export default Membro;
+export default Member;

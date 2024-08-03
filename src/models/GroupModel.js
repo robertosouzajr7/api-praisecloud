@@ -1,66 +1,41 @@
-import mongoose, { Schema } from "mongoose";
-// Model para Criar Grupo
+import { DataTypes } from "sequelize";
+import sequelize from "../config/database.js";
 
-const GrupoSchema = new mongoose.Schema({
-  nome: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-  },
-  telefone: {
-    type: String,
-  },
-  senha: {
-    type: String,
-    required: true,
-  },
-  isAdmin: {
-    type: Boolean,
-    default: true,
-  },
-
-  membros: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Membro",
+const Group = sequelize.define(
+  "Group",
+  {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
     },
-  ],
-
-  musicas: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Musica",
+    nome: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
-  ],
-  kits: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Kit",
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
     },
-  ],
-
-  ImgPerfil: {
-    type: String,
+    telefone: {
+      type: DataTypes.STRING,
+    },
+    senha: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    isAdmin: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
+    ImgPerfil: {
+      type: DataTypes.STRING,
+    },
   },
+  {
+    timestamps: true,
+  }
+);
 
-  Agenda: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Agenda",
-    },
-  ],
-
-  posts: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Posts",
-    },
-  ],
-});
-
-const Grupo = mongoose.model("Grupo", GrupoSchema);
-
-export default Grupo;
+export default Group;

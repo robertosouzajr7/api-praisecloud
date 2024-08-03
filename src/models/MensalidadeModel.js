@@ -1,35 +1,39 @@
-import mongoose from "mongoose";
+import { DataTypes } from "sequelize";
+import sequelize from "../config/database.js";
+import Member from "./Member.js";
 
-//Model para cadastrar musica
-const mensalidadeModel = mongoose.Schema({
-  Valor: {
-    type: Number,
-    required: true,
-  },
-
-  descricao: {
-    type: String,
-  },
-  vencimento: {
-    type: Date,
-    required: true,
-  },
-  membros: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Membro",
+const Mensalidade = sequelize.define(
+  "Mensalidade",
+  {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
     },
-  ],
-  createAt: {
-    type: Date,
-    default: Date.now,
+    valor: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    descricao: {
+      type: DataTypes.STRING,
+    },
+    vencimento: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    membroId: {
+      type: DataTypes.UUID,
+      references: {
+        model: Member,
+        key: "id",
+      },
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    },
   },
-  updateAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
-
-const Mensalidade = mongoose.model("Mensalidade", mensalidadeModel);
+  {
+    timestamps: true,
+  }
+);
 
 export default Mensalidade;

@@ -1,44 +1,47 @@
-import mongoose from "mongoose";
+import { DataTypes } from "sequelize";
+import sequelize from "../config/database.js";
+import Group from "./GroupModel.js";
 
-//Model para cadastrar musica
-const musicModel = mongoose.Schema({
-  Title: {
-    type: String,
-    required: true,
+const Musica = sequelize.define(
+  "Musica",
+  {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+    },
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    musicUrl: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    capaUrl: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    letra: {
+      type: DataTypes.TEXT,
+    },
+    artista: {
+      type: DataTypes.STRING,
+    },
+    grupoId: {
+      type: DataTypes.UUID,
+      references: {
+        model: Group,
+        key: "id",
+      },
+      allowNull: false,
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    },
   },
-
-  musicUrl: {
-    type: String,
-    required: true,
-  },
-
-  capaUrl: {
-    type: String,
-    required: true,
-  },
-  letra: {
-    type: String,
-  },
-  artista: {
-    type: String,
-  },
-
-  grupo: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Grupo",
-    required: true,
-  },
-
-  createAt: {
-    type: Date,
-    default: Date.now,
-  },
-  updateAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
-
-const Musica = mongoose.model("Musica", musicModel);
+  {
+    timestamps: true,
+  }
+);
 
 export default Musica;

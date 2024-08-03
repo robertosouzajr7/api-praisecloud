@@ -1,44 +1,49 @@
-import mongoose, { Schema } from "mongoose";
+import { DataTypes } from "sequelize";
+import sequelize from "../config/database.js";
+import Group from "./GroupModel.js";
 
-//Model para cadastrar Kits de Ensaio
-const KitModel = mongoose.Schema({
-  Title: {
-    type: String,
-    required: true,
+const Kit = sequelize.define(
+  "Kit",
+  {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+    },
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    nipe: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        isIn: [["Soprano", "Tenor", "Barítono", "Contralto", "Mezzo", "Baixo"]],
+      },
+    },
+    cantado: {
+      type: DataTypes.STRING,
+    },
+    kitUrl: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    letra: {
+      type: DataTypes.TEXT,
+    },
+    grupoId: {
+      type: DataTypes.UUID,
+      references: {
+        model: Group,
+        key: "id",
+      },
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    },
   },
-  nipe: {
-    type: String,
-    enum: ["Soprano", "Tenor", "Barítono", "Contralto", "Mezzo", "Baixo"],
-    required: true,
-  },
-
-  cantado: {
-    type: String,
-  },
-
-  kitUrl: {
-    type: String,
-    required: true,
-  },
-
-  letra: {
-    type: String,
-  },
-  grupo: {
-    type: Schema.Types.ObjectId,
-    ref: "Grupo",
-  },
-
-  createAt: {
-    type: Date,
-    default: Date.now,
-  },
-  updateAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
-
-const Kit = mongoose.model("Kit", KitModel);
+  {
+    timestamps: true,
+  }
+);
 
 export default Kit;

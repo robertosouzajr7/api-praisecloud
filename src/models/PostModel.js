@@ -1,42 +1,49 @@
-import mongoose, { Schema } from "mongoose";
+import { DataTypes } from "sequelize";
+import sequelize from "../config/database.js";
+import Group from "./GroupModel.js";
+import Member from "./Member.js";
 
-//Model para cadastrar Kits de Ensaio
-const PostModel = mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-  },
-  descricao: {
-    type: String,
-    required: true,
-  },
-
-  comentarios: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Comentario",
+const Post = sequelize.define(
+  "Post",
+  {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
     },
-  ],
-
-  autor: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Membro",
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    descricao: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    imagem: {
+      type: DataTypes.STRING,
+    },
+    grupoId: {
+      type: DataTypes.UUID,
+      references: {
+        model: Group,
+        key: "id",
+      },
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    },
+    autorId: {
+      type: DataTypes.UUID,
+      references: {
+        model: Member,
+        key: "id",
+      },
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    },
   },
+  {
+    timestamps: true,
+  }
+);
 
-  grupo: {
-    type: Schema.Types.ObjectId,
-    ref: "Grupo",
-  },
-  imagem: {
-    type: String,
-  },
-
-  createAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
-
-const Posts = mongoose.model("Posts", PostModel);
-
-export default Posts;
+export default Post;

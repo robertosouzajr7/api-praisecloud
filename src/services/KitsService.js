@@ -1,31 +1,32 @@
 import Kit from "../models/KitModel.js";
 
-//cadastrar um novo kit de ensaio
+//Cadastrar um novo kit de ensaio
 export const createKit = async (data) => {
-  const kit = new Kit(data);
-  await kit.save();
+  const kit = await Kit.create(data);
   return kit;
 };
-//pegar todos os kits de ensaio pelo Id do Grupo
+
+//Pegar todos os kits de ensaio pelo Id do Grupo
 export const getAllKitsByGroup = async (idGroup) => {
-  const kits = await Kit.find({ grupo: idGroup });
+  const kits = await Kit.findAll({ where: { grupo: idGroup } });
   return kits;
 };
 
 //Buscar um Kit de ensaio pelo Id
 export const getKitById = async (idKit) => {
-  const kit = await Kit.findById(idKit);
+  const kit = await Kit.findByPk(idKit);
   return kit;
 };
 
-//atualizar um kit de ensaio
+//Atualizar um kit de ensaio
 export const updateKit = async (idKit, data) => {
-  const kit = await Kit.findByIdAndUpdate(idKit, data);
+  await Kit.update(data, { where: { id: idKit } });
+  const kit = await Kit.findByPk(idKit);
   return kit;
 };
 
-//deletar um kit de ensaio
+//Deletar um kit de ensaio
 export const deleteKit = async (idKit) => {
-  const kit = await Kit.findByIdAndDelete(idKit);
+  const kit = await Kit.destroy({ where: { id: idKit } });
   return kit;
 };

@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import Grupo from "../models/GroupModel.js"; // Certifique-se de usar a importação correta
+import Group from "../models/GroupModel.js";
+// Certifique-se de usar a importação correta
 
 export const createGroup = async (data) => {
   const { senha } = data;
@@ -11,19 +12,17 @@ export const createGroup = async (data) => {
     ...data,
     senha: hashPassword,
   };
-  const novoGrupo = new Grupo({
-    ...user,
+  const novoGrupo = await Group.create(user);
+  const grupoSaved = await Group.findByPk(novoGrupo.id, {
+    attributes: { exclude: ["senha"] },
   });
-  await novoGrupo.save();
-  const grupoSaved = await Grupo.findById(novoGrupo._id).select("-senha");
   return grupoSaved;
 };
 
 // Service para Login do Admin do Grupo
-
 export const loginAdmin = async (email, senha) => {
   // Procure o usuário pelo email
-  const findUser = await Grupo.findOne({ email });
+  const findUser = await Group.findOne({ where: { email } });
   if (!findUser) {
     throw new Error("Usuário ou senha não encontrado");
   }
@@ -41,7 +40,7 @@ export const loginAdmin = async (email, senha) => {
 
   // Gere um token JWT com as informações do usuário
   const token = jwt.sign(
-    { id: findUser._id, isAdmin: findUser.isAdmin },
+    { id: findUser.id, isAdmin: findUser.isAdmin },
     process.env.JWT_SECRET,
     { expiresIn: "1d" }
   );
@@ -50,7 +49,7 @@ export const loginAdmin = async (email, senha) => {
 };
 
 export const getGroupByID = async (id) => {
-  const grupo = await Grupo.findById(id);
+  const grupo = await Group.findByPk(id);
 
   if (!grupo) {
     throw new Error("Grupo não encontrado");
@@ -60,13 +59,13 @@ export const getGroupByID = async (id) => {
 };
 
 export const updateGrupo = async (id, data) => {
-  console.log(id, data);
-  const grupo = await Grupo.findByIdAndUpdate(id, data, { new: true });
+  await Group.update(data, { where: { id } });
+  const grupo = await Group.findByPk(id);
   return grupo;
 };
 
 export const deleteGrupo = async (id) => {
-  const grupo = await Grupo.findByIdAndDelete(id);
+  const grupo = await Group.destroy({ where: { id } });
   if (!grupo) {
     throw new Error("Grupo não encontrado");
   }
@@ -74,6 +73,6 @@ export const deleteGrupo = async (id) => {
 };
 
 export const getAllGroups = async () => {
-  const grupos = await Grupo.find().select("-senha");
+  const grupos = await Group.findAll({ attributes: { exclude: ["senha"] } });
   return grupos;
 };

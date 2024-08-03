@@ -1,45 +1,49 @@
-import mongoose from "mongoose";
+import { DataTypes } from "sequelize";
+import sequelize from "../config/database.js";
+import Group from "./GroupModel.js";
 
-//Model para cadastrar Kits de Ensaio
-const AgendaModel = mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
+const Agenda = sequelize.define(
+  "Agenda",
+  {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+    },
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    descricao: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    endereco: {
+      type: DataTypes.STRING,
+    },
+    data: {
+      type: DataTypes.DATE,
+    },
+    status: {
+      type: DataTypes.STRING,
+      validate: {
+        isIn: [["Confirmado", "Agendado", "Finalizado", "Cancelado"]],
+      },
+    },
+    grupoId: {
+      type: DataTypes.UUID,
+      references: {
+        model: Group,
+        key: "id",
+      },
+      allowNull: false,
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    },
   },
-  descricao: {
-    type: String,
-    required: true,
-  },
+  {
+    timestamps: true,
+  }
+);
 
-  endereco: {
-    type: String,
-  },
-
-  data: {
-    type: Date,
-  },
-
-  Status: {
-    type: String,
-    enum: ["Confirmado", "Agendado", "Finalizado", "Cancelado"],
-  },
-
-  grupo: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "GrupoModel",
-    required: true,
-  },
-
-  createAt: {
-    type: Date,
-    default: Date.now,
-  },
-  updateAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
-
-const Agendas = mongoose.model("Agenda", AgendaModel);
-
-export default Agendas;
+export default Agenda;
