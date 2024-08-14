@@ -8,13 +8,17 @@ export const createKit = async (data) => {
 
 //Pegar todos os kits de ensaio pelo Id do Grupo
 export const getAllKitsByGroup = async (idGroup) => {
-  const kits = await Kit.findAll({ where: { grupo: idGroup } });
+  const kits = await Kit.findAll({ where: { grupoId: idGroup } });
+  console.log(kits);
   return kits;
 };
 
 //Buscar um Kit de ensaio pelo Id
 export const getKitById = async (idKit) => {
+  console.log(idKit);
   const kit = await Kit.findByPk(idKit);
+
+  console.log(kit);
   return kit;
 };
 

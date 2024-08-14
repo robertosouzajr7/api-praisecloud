@@ -3,7 +3,7 @@ import sequelize from "../config/database.js";
 import Group from "./GroupModel.js";
 
 const Member = sequelize.define(
-  "Member",
+  "Members",
   {
     id: {
       type: DataTypes.UUID,
@@ -67,5 +67,23 @@ const Member = sequelize.define(
     timestamps: true,
   }
 );
+
+Member.afterCreate(async (member, options) => {
+  const group = await Group.findByPk(member.grupoId);
+  if (group) {
+    await group.update({
+      membros: [...group.membros, member.id],
+    });
+  }
+});
+
+Member.afterDestroy(async (member, options) => {
+  const group = await Group.findByPk(member.grupoId);
+  if (group) {
+    await group.update({
+      membros: group.membros.filter((id) => id !== member.id),
+    });
+  }
+});
 
 export default Member;

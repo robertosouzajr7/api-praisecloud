@@ -64,10 +64,16 @@ export const deleteMembroController = async (req, res) => {
 // Controller de Buscar todos os Membros pelo Id do grupo
 export const getAllMembrosByGroupIDController = async (req, res) => {
   try {
-    const { idGrupo } = req.params;
+    const { idGrupo } = req.params; // Captura o ID do grupo da URL
+
+    if (!idGrupo) {
+      return res.status(400).json({ message: "ID do grupo não fornecido" });
+    }
+
     const membros = await getAllMembrosByGroupID(idGrupo);
-    res.status(200).json(membros);
+    return res.status(200).json(membros);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error("Erro ao buscar membros:", error);
+    return res.status(400).json({ message: error.message });
   }
 };

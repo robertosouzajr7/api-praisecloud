@@ -12,7 +12,7 @@ import Mensalidade from "./MensalidadeModel.js";
 // Relacionamentos de Grupo
 Group.hasMany(Member, {
   foreignKey: "grupoId",
-  as: "membros",
+  as: "membersList",
   onDelete: "CASCADE",
 });
 Group.hasMany(Musica, {
@@ -38,7 +38,11 @@ Group.hasMany(Comentario, {
 });
 
 // Relacionamentos de Membro
-Member.belongsTo(Group, { foreignKey: "grupoId", as: "grupo" });
+Member.belongsTo(Group, {
+  foreignKey: "grupoId",
+  as: "grupo",
+});
+
 Member.hasMany(Post, {
   foreignKey: "autorId",
   as: "posts",

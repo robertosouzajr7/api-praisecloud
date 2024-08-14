@@ -23,8 +23,8 @@ membroRouter.delete("/:idMembro", authenticateAdmin, deleteMembroController);
 
 //Rota de Pegar todos os membros de um grupo
 membroRouter.get(
-  "/membro/grupo/:idGrupo",
-  authenticateUser,
+  "/:idGrupo/membros",
+  authenticateAdmin,
   getAllMembrosByGroupIDController
 );
 

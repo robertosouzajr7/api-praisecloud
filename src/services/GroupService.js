@@ -8,11 +8,10 @@ export const createGroup = async (data) => {
   const salt = await bcrypt.genSalt(10);
   const hashPassword = await bcrypt.hash(senha, salt);
 
-  const user = {
+  const novoGrupo = await Group.create({
     ...data,
     senha: hashPassword,
-  };
-  const novoGrupo = await Group.create(user);
+  });
   const grupoSaved = await Group.findByPk(novoGrupo.id, {
     attributes: { exclude: ["senha"] },
   });
@@ -21,31 +20,38 @@ export const createGroup = async (data) => {
 
 // Service para Login do Admin do Grupo
 export const loginAdmin = async (email, senha) => {
-  // Procure o usuário pelo email
-  const findUser = await Group.findOne({ where: { email } });
-  if (!findUser) {
-    throw new Error("Usuário ou senha não encontrado");
+  try {
+    // Procure o usuário pelo email
+    const findUser = await Group.findOne({
+      where: { email: email },
+    });
+    if (!findUser) {
+      throw new Error("Usuário ou senha não encontrado");
+    }
+    console.log(`usuário encontrado! ${findUser.senha}`);
+    // Verifique a senha
+    const isValidPassword = await bcrypt.compare(senha, findUser.senha);
+    if (!isValidPassword) {
+      throw new Error("Usuário ou senha não encontrado");
+    }
+
+    // Verifique se o usuário é administrador
+    if (!findUser.isAdmin) {
+      throw new Error("Acesso negado: usuário não é administrador");
+    }
+
+    // Gere um token JWT com as informações do usuário
+    const token = jwt.sign(
+      { id: findUser.id, isAdmin: findUser.isAdmin },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
+
+    return token;
+  } catch (error) {
+    console.error("Erro no login do administrador:", error);
+    throw new Error("Erro ao fazer login: " + error.message);
   }
-
-  // Verifique a senha
-  const isValidPassword = await bcrypt.compare(senha, findUser.senha);
-  if (!isValidPassword) {
-    throw new Error("Usuário ou senha não encontrado");
-  }
-
-  // Verifique se o usuário é administrador
-  if (!findUser.isAdmin) {
-    throw new Error("Usuário não é administrador");
-  }
-
-  // Gere um token JWT com as informações do usuário
-  const token = jwt.sign(
-    { id: findUser.id, isAdmin: findUser.isAdmin },
-    process.env.JWT_SECRET,
-    { expiresIn: "1d" }
-  );
-
-  return token;
 };
 
 export const getGroupByID = async (id) => {

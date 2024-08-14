@@ -34,15 +34,16 @@ export async function updateKitController(req, res) {
 //Controller de Pegar todos os kits de ensaio de um grupo
 
 export async function getAllKitsByGroupController(req, res) {
-  const { id } = req.params;
-  const kits = await getAllKitsByGroup(id);
+  const { idGrupo } = req.params;
+  const kits = await getAllKitsByGroup(idGrupo);
   return res.status(200).json(kits);
 }
 
 //Controller de Pegar um kit de ensaio pelo Id
 
 export async function getKitByIdController(req, res) {
-  const { id } = req.params;
-  const kit = await getKitById(id);
+  const { idKit } = req.params;
+  console.log(req.params);
+  const kit = await getKitById(idKit);
   return res.status(200).json(kit);
 }
