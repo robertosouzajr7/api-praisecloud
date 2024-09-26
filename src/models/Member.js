@@ -3,7 +3,7 @@ import sequelize from "../config/database.js";
 import Group from "./GroupModel.js";
 
 const Member = sequelize.define(
-  "Members",
+  "Member",
   {
     id: {
       type: DataTypes.UUID,
@@ -21,7 +21,7 @@ const Member = sequelize.define(
     },
     telefone: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     senha: {
       type: DataTypes.STRING,
@@ -54,36 +54,15 @@ const Member = sequelize.define(
     },
     grupoId: {
       type: DataTypes.UUID,
-      references: {
-        model: Group,
-        key: "id",
-      },
       allowNull: false,
       onDelete: "CASCADE",
       onUpdate: "CASCADE",
     },
   },
   {
+    tableName: "Member", // Define explicitamente o nome da tabela como "Member"
     timestamps: true,
   }
 );
-
-Member.afterCreate(async (member, options) => {
-  const group = await Group.findByPk(member.grupoId);
-  if (group) {
-    await group.update({
-      membros: [...group.membros, member.id],
-    });
-  }
-});
-
-Member.afterDestroy(async (member, options) => {
-  const group = await Group.findByPk(member.grupoId);
-  if (group) {
-    await group.update({
-      membros: group.membros.filter((id) => id !== member.id),
-    });
-  }
-});
 
 export default Member;

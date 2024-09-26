@@ -106,7 +106,7 @@ app.use(cors(corsOptions));
 
 // Configuração das rotas
 app.use("/grupo", grupoRouter);
-app.use("/grupo", membroRouter);
+app.use("/grupos", membroRouter);
 app.use("/membro", membroRouter);
 app.use("/kit", kitRouter);
 app.use("/mensalidade", mensalidadesRouter);

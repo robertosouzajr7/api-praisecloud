@@ -1,55 +1,60 @@
 "use strict";
 
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Musicas", {
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.createTable("Agendas", {
       id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
-        allowNull: false,
       },
       title: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      musicUrl: {
+      descricao: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      capaUrl: {
+      endereco: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
       },
-      letra: {
-        type: Sequelize.TEXT,
+      data: {
+        type: Sequelize.DATE,
+        allowNull: true,
       },
-      artista: {
+      status: {
         type: Sequelize.STRING,
+        allowNull: true,
+        validate: {
+          isIn: [["Confirmado", "Agendado", "Finalizado", "Cancelado"]],
+        },
       },
       grupoId: {
         type: Sequelize.UUID,
+        allowNull: false,
         references: {
-          model: "Groups",
+          model: "Groups", // Nome da tabela referenciada (não o nome da model)
           key: "id",
         },
-        allowNull: false,
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,
+        defaultValue: Sequelize.fn("NOW"),
       },
       updatedAt: {
         type: Sequelize.DATE,
         allowNull: false,
+        defaultValue: Sequelize.fn("NOW"),
       },
     });
   },
 
-  async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Musicas");
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.dropTable("Agendas");
   },
 };

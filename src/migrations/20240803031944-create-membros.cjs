@@ -1,14 +1,12 @@
 "use strict";
 
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Members", {
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.createTable("Member", {
       id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
-        allowNull: false,
       },
       nome: {
         type: Sequelize.STRING,
@@ -21,7 +19,7 @@ module.exports = {
       },
       telefone: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       senha: {
         type: Sequelize.STRING,
@@ -29,6 +27,7 @@ module.exports = {
       },
       imgPerfil: {
         type: Sequelize.STRING,
+        allowNull: true,
       },
       nascimento: {
         type: Sequelize.DATE,
@@ -37,10 +36,18 @@ module.exports = {
       nipe: {
         type: Sequelize.STRING,
         allowNull: false,
+        validate: {
+          isIn: [
+            ["Soprano", "Contralto", "Mezzo", "Tenor", "Barítono", "Baixo"],
+          ],
+        },
       },
       cargo: {
         type: Sequelize.STRING,
         allowNull: false,
+        validate: {
+          isIn: [["Direção", "Membro", "Banda", "Staff"]],
+        },
       },
       isAdmin: {
         type: Sequelize.BOOLEAN,
@@ -48,26 +55,28 @@ module.exports = {
       },
       grupoId: {
         type: Sequelize.UUID,
+        allowNull: false,
         references: {
-          model: "Groups",
+          model: "Groups", // Nome da tabela associada (não o nome da model)
           key: "id",
         },
-        allowNull: false,
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,
+        defaultValue: Sequelize.fn("NOW"),
       },
       updatedAt: {
         type: Sequelize.DATE,
         allowNull: false,
+        defaultValue: Sequelize.fn("NOW"),
       },
     });
   },
 
-  async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Members");
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.dropTable("Member");
   },
 };

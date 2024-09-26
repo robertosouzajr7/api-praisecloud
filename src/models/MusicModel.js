@@ -44,4 +44,9 @@ const Musica = sequelize.define(
   }
 );
 
+/* Member.associate = () => {
+  const { Group } = sequelize.models;
+  Musica.belongsTo(Group, { foreignKey: "grupoId", as: "grupo" });
+}; */
+
 export default Musica;

@@ -32,10 +32,6 @@ const Group = sequelize.define(
     ImgPerfil: {
       type: DataTypes.STRING,
     },
-    membros: {
-      type: DataTypes.ARRAY(DataTypes.UUID),
-      defaultValue: [],
-    },
   },
   {
     timestamps: true,

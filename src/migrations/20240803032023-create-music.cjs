@@ -1,54 +1,57 @@
 "use strict";
 
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Agendas", {
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.createTable("Musicas", {
       id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
-        allowNull: false,
       },
       title: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      descricao: {
+      musicUrl: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      endereco: {
+      capaUrl: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
-      data: {
-        type: Sequelize.DATE,
+      letra: {
+        type: Sequelize.TEXT,
+        allowNull: true,
       },
-      status: {
+      artista: {
         type: Sequelize.STRING,
+        allowNull: true,
       },
       grupoId: {
         type: Sequelize.UUID,
+        allowNull: false,
         references: {
-          model: "Groups",
+          model: "Groups", // Nome da tabela referenciada
           key: "id",
         },
-        allowNull: false,
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,
+        defaultValue: Sequelize.fn("NOW"),
       },
       updatedAt: {
         type: Sequelize.DATE,
         allowNull: false,
+        defaultValue: Sequelize.fn("NOW"),
       },
     });
   },
 
-  async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Agendas");
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.dropTable("Musicas");
   },
 };

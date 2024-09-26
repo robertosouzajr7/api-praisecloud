@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import Membro from "../models/Member.js";
 import Group from "../models/GroupModel.js";
+import Member from "../models/Member.js";
 //Cadastrar um novo membro
 export const createMembro = async (data) => {
   try {
@@ -18,7 +18,7 @@ export const createMembro = async (data) => {
     } = data;
 
     // Verificar se o email já existe
-    const existingMember = await Membro.findOne({ where: { email } });
+    const existingMember = await Member.findOne({ where: { email } });
     if (existingMember) {
       throw new Error("Email já está em uso");
     }
@@ -28,7 +28,7 @@ export const createMembro = async (data) => {
     const hashedPassword = await bcrypt.hash(senha, salt);
 
     // Criar novo membro
-    const newMembro = await Membro.create({
+    const newMembro = await Member.create({
       nome,
       email,
       telefone,
@@ -48,7 +48,7 @@ export const createMembro = async (data) => {
 
 //Login de Membro
 export const loginMembro = async (email, senha) => {
-  const user = await Membro.findOne({ where: { email } });
+  const user = await Member.findOne({ where: { email } });
   if (!user) {
     throw new Error("Usuário não encontrado!");
   }
@@ -83,7 +83,7 @@ export const loginMembro = async (email, senha) => {
 
 //Pegar todos os dados do membro pelo Id
 export const getMembroById = async (id) => {
-  const user = await Membro.findByPk(id, {
+  const user = await Member.findByPk(id, {
     attributes: { exclude: ["senha"] },
   });
   return user;
@@ -92,22 +92,22 @@ export const getMembroById = async (id) => {
 //Pegar todos os Membros cadastrados no grupo
 export const getAllMembrosByGroupID = async (idGrupo) => {
   try {
+    console.log(idGrupo);
     const grupo = await Group.findOne({
       where: { id: idGrupo },
-      include: [
-        {
-          model: Membro,
-          as: "membersList", // Este alias deve corresponder ao definido na associação
-          attributes: { exclude: ["senha"] },
-        },
-      ],
+      include: {
+        model: Member,
+        as: "membersList", // Certifique-se de que o alias está correto
+        attributes: { exclude: ["senha"] },
+      },
     });
+    console.log("grupo encontrado", grupo);
 
     if (!grupo) {
       throw new Error("Grupo não encontrado");
     }
 
-    return grupo.membros;
+    return grupo.membersList;
   } catch (error) {
     console.error("Erro ao buscar membros do grupo:", error);
     throw error;
@@ -116,14 +116,14 @@ export const getAllMembrosByGroupID = async (idGrupo) => {
 
 //Atualizar os dados de um membro
 export const updateMembro = async (idMembro, data) => {
-  await Membro.update(data, { where: { id: idMembro } });
-  const user = await Membro.findByPk(idMembro);
+  await Member.update(data, { where: { id: idMembro } });
+  const user = await Member.findByPk(idMembro);
   return user;
 };
 
 //Deletar um membro
 export const deleteMembro = async (idMembro) => {
-  const membro = await Membro.destroy({ where: { id: idMembro } });
+  const membro = await Member.destroy({ where: { id: idMembro } });
   if (!membro) {
     throw new Error("Membro não encontrado");
   }

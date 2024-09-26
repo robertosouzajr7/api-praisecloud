@@ -1,14 +1,12 @@
 "use strict";
 
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
+  up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable("Comentarios", {
       id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
-        allowNull: false,
       },
       descricao: {
         type: Sequelize.TEXT,
@@ -16,46 +14,48 @@ module.exports = {
       },
       autorId: {
         type: Sequelize.UUID,
+        allowNull: true,
         references: {
-          model: "Members",
+          model: "Member", // Nome da tabela referenciada (não o nome da model)
           key: "id",
         },
-        allowNull: false,
-        onDelete: "CASCADE",
+        onDelete: "SET NULL",
         onUpdate: "CASCADE",
       },
       grupoId: {
         type: Sequelize.UUID,
+        allowNull: true,
         references: {
-          model: "Groups",
+          model: "Groups", // Nome da tabela referenciada (não o nome da model)
           key: "id",
         },
-        allowNull: false,
-        onDelete: "CASCADE",
+        onDelete: "SET NULL",
         onUpdate: "CASCADE",
       },
       postId: {
         type: Sequelize.UUID,
+        allowNull: true,
         references: {
-          model: "Posts",
+          model: "Posts", // Nome da tabela referenciada (não o nome da model)
           key: "id",
         },
-        allowNull: false,
-        onDelete: "CASCADE",
+        onDelete: "SET NULL",
         onUpdate: "CASCADE",
       },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,
+        defaultValue: Sequelize.fn("NOW"),
       },
       updatedAt: {
         type: Sequelize.DATE,
         allowNull: false,
+        defaultValue: Sequelize.fn("NOW"),
       },
     });
   },
 
-  async down(queryInterface, Sequelize) {
+  down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable("Comentarios");
   },
 };

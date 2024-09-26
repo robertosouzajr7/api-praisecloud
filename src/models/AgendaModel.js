@@ -45,5 +45,4 @@ const Agenda = sequelize.define(
     timestamps: true,
   }
 );
-
 export default Agenda;
