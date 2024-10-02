@@ -46,14 +46,4 @@ const Post = sequelize.define(
   }
 );
 
-/* Member.associate = () => {
-  const { Group, Post, Comentario } = sequelize.models;
-  Post.belongsTo(Group, { foreignKey: "grupoId", as: "grupo" });
-  Post.belongsTo(Member, { foreignKey: "autorId", as: "autor" });
-  Post.hasMany(Comentario, {
-    foreignKey: "postId",
-    as: "comentarios",
-    onDelete: "CASCADE",
-  });
-}; */
 export default Post;

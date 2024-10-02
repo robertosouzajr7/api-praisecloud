@@ -7,11 +7,18 @@ export const defineAssociations = () => {
     sequelize.models;
 
   // Relacionamentos de Grupo
+
+  //Member.belongsTo(Group, {
   Group.hasMany(Member, {
-    foreignKey: "grupoId",
-    as: "membersList",
-    onDelete: "CASCADE",
+    foreignKey: "groupId",
+    as: "membros", // Alias que será utilizado no include
   });
+
+  Member.belongsTo(Group, {
+    foreignKey: "groupId",
+    as: "grupo",
+  });
+
   Group.hasMany(Musica, {
     foreignKey: "grupoId",
     as: "musicas",
@@ -39,15 +46,13 @@ export const defineAssociations = () => {
   });
 
   // Relacionamentos de Membro
-  Member.belongsTo(Group, {
-    foreignKey: "grupoId",
-    as: "grupo",
-  });
+
   Member.hasMany(Post, {
     foreignKey: "autorId",
     as: "posts",
     onDelete: "CASCADE",
   });
+
   Member.hasMany(Comentario, {
     foreignKey: "autorId",
     as: "comentarios",

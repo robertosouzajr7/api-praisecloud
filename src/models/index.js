@@ -21,6 +21,8 @@ sequelize.addModels([
   Mensalidade,
 ]);
 
+console.log(sequelize._model);
+
 defineAssociations();
 
 export default sequelize;

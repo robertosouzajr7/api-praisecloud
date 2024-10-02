@@ -93,21 +93,22 @@ export const getMembroById = async (id) => {
 export const getAllMembrosByGroupID = async (idGrupo) => {
   try {
     console.log(idGrupo);
+
     const grupo = await Group.findOne({
       where: { id: idGrupo },
       include: {
-        model: Member,
-        as: "membersList", // Certifique-se de que o alias está correto
-        attributes: { exclude: ["senha"] },
+        model: Member, // Inclua o modelo associado
+        as: "membros", // O alias usado no `hasMany`
       },
     });
+
     console.log("grupo encontrado", grupo);
 
     if (!grupo) {
       throw new Error("Grupo não encontrado");
     }
 
-    return grupo.membersList;
+    return grupo;
   } catch (error) {
     console.error("Erro ao buscar membros do grupo:", error);
     throw error;

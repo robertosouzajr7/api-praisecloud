@@ -11,7 +11,7 @@ import "./models/associations.js";
 
 const syncDatabase = async () => {
   try {
-    await sequelize.sync({ force: true }); // 'force: true' recria todas as tabelas
+    await sequelize.sync({ force: false }); // 'force: true' recria todas as tabelas
     console.log("Database synced successfully.");
   } catch (error) {
     console.error("Error syncing database:", error);

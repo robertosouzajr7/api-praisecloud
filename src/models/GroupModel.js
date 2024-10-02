@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize";
 import sequelize from "../config/database.js";
 
 const Group = sequelize.define(
-  "Group",
+  "Groups",
   {
     id: {
       type: DataTypes.UUID,

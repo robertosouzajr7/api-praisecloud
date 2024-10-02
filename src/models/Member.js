@@ -54,13 +54,15 @@ const Member = sequelize.define(
     },
     grupoId: {
       type: DataTypes.UUID,
-      allowNull: false,
+      references: {
+        model: Group,
+        key: "id",
+      },
       onDelete: "CASCADE",
       onUpdate: "CASCADE",
     },
   },
   {
-    tableName: "Member", // Define explicitamente o nome da tabela como "Member"
     timestamps: true,
   }
 );
