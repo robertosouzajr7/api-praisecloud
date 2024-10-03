@@ -1,36 +1,44 @@
-import Kit from "../models/KitModel.js";
+import prisma from "../../prisma/prismaClient.js";
 
-//Cadastrar um novo kit de ensaio
+// Cadastrar um novo kit de ensaio
 export const createKit = async (data) => {
-  const kit = await Kit.create(data);
+  console.log(data);
+  const kit = await prisma.kit.create({
+    data,
+  });
   return kit;
 };
 
-//Pegar todos os kits de ensaio pelo Id do Grupo
+// Pegar todos os kits de ensaio pelo Id do Grupo
 export const getAllKitsByGroup = async (idGroup) => {
-  const kits = await Kit.findAll({ where: { grupoId: idGroup } });
-  console.log(kits);
+  const kits = await prisma.kit.findMany({
+    where: { grupoId: idGroup },
+    include: { grupo: true },
+  });
   return kits;
 };
 
-//Buscar um Kit de ensaio pelo Id
+// Buscar um Kit de ensaio pelo Id
 export const getKitById = async (idKit) => {
-  console.log(idKit);
-  const kit = await Kit.findByPk(idKit);
-
-  console.log(kit);
+  const kit = await prisma.kit.findUnique({
+    where: { id: idKit },
+  });
   return kit;
 };
 
-//Atualizar um kit de ensaio
+// Atualizar um kit de ensaio
 export const updateKit = async (idKit, data) => {
-  await Kit.update(data, { where: { id: idKit } });
-  const kit = await Kit.findByPk(idKit);
+  const kit = await prisma.kit.update({
+    where: { id: idKit },
+    data,
+  });
   return kit;
 };
 
-//Deletar um kit de ensaio
+// Deletar um kit de ensaio
 export const deleteKit = async (idKit) => {
-  const kit = await Kit.destroy({ where: { id: idKit } });
+  const kit = await prisma.kit.delete({
+    where: { id: idKit },
+  });
   return kit;
 };

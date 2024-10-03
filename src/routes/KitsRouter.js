@@ -27,11 +27,7 @@ kitRouter.put("/:id", authenticateAdmin, updateKitController);
 
 //Rota de Pegar todos os kits de um grupo
 
-kitRouter.get(
-  "/grupos/:idGrupo",
-  authenticateUser,
-  getAllKitsByGroupController
-);
+kitRouter.get("/:idGrupo/kit", authenticateUser, getAllKitsByGroupController);
 
 //Rota de Pegar um kit pelo Id
 

@@ -1,38 +1,48 @@
-import Post from "../models/PostModel.js";
+import prisma from "../../prisma/prismaClient.js";
 
-//Cadastrar um novo post
+// Cadastrar um novo post
 export const createPost = async (data) => {
-  const newPost = await Post.create(data);
+  const newPost = await prisma.post.create({
+    data,
+  });
   return newPost;
 };
 
-//Pegar todos os posts
+// Pegar todos os posts
 export const getAllPosts = async () => {
-  const posts = await Post.findAll();
+  const posts = await prisma.post.findMany();
   return posts;
 };
 
-//Pegar todos os posts de um grupo
+// Pegar todos os posts de um grupo
 export const getAllPostsByGroup = async (idGroup) => {
-  const posts = await Post.findAll({ where: { grupo: idGroup } });
+  const posts = await prisma.post.findMany({
+    where: { grupoId: idGroup },
+  });
   return posts;
 };
 
-//Pegar um post pelo Id
+// Pegar um post pelo Id
 export const getPostById = async (idPost) => {
-  const post = await Post.findByPk(idPost);
+  const post = await prisma.post.findUnique({
+    where: { id: idPost },
+  });
   return post;
 };
 
-//Atualizar um post
+// Atualizar um post
 export const updatePost = async (idPost, data) => {
-  await Post.update(data, { where: { id: idPost } });
-  const post = await Post.findByPk(idPost);
+  const post = await prisma.post.update({
+    where: { id: idPost },
+    data,
+  });
   return post;
 };
 
-//Deletar um post
+// Deletar um post
 export const deletePost = async (idPost) => {
-  const post = await Post.destroy({ where: { id: idPost } });
+  const post = await prisma.post.delete({
+    where: { id: idPost },
+  });
   return post;
 };

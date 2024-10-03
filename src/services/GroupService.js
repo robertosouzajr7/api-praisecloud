@@ -1,61 +1,71 @@
+import prisma from "../../prisma/prismaClient.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import Group from "../models/GroupModel.js";
-// Certifique-se de usar a importação correta
 
+// Cadastrar um novo grupo
 export const createGroup = async (data) => {
-  const { senha } = data;
+  const { senha, membros, ...rest } = data;
   const salt = await bcrypt.genSalt(10);
   const hashPassword = await bcrypt.hash(senha, salt);
+  console.log(rest);
+  const novoGrupo = await prisma.group.create({
+    data: {
+      ...rest,
+      senha: hashPassword,
+      ...(membros &&
+        membros.length > 0 && {
+          membros: {
+            create: membros.map(async (membro) => {
+              nome: membro.nome;
+              email: membro.email;
+              telefone: membro.telefone;
+              senha: await bcrypt.hash(membro.senha, 10);
+              nascimento: membro.nascimento;
+              nipe: membro.nipe;
+              cargo: membro.cargo;
+              isAdmin: membro.isAdmin || false;
+            }),
+          },
+        }),
+    },
+  });
 
-  const novoGrupo = await Group.create({
-    ...data,
-    senha: hashPassword,
-  });
-  const grupoSaved = await Group.findByPk(novoGrupo.id, {
-    attributes: { exclude: ["senha"] },
-  });
-  return grupoSaved;
+  return novoGrupo;
 };
 
-// Service para Login do Admin do Grupo
+// Login do Admin do Grupo
 export const loginAdmin = async (email, senha) => {
-  try {
-    // Procure o usuário pelo email
-    const findUser = await Group.findOne({
-      where: { email: email },
-    });
-    if (!findUser) {
-      throw new Error("Usuário ou senha não encontrado");
-    }
-    console.log(`usuário encontrado! ${findUser.senha}`);
-    // Verifique a senha
-    const isValidPassword = await bcrypt.compare(senha, findUser.senha);
-    if (!isValidPassword) {
-      throw new Error("Usuário ou senha não encontrado");
-    }
+  const findUser = await prisma.group.findUnique({
+    where: { email },
+  });
 
-    // Verifique se o usuário é administrador
-    if (!findUser.isAdmin) {
-      throw new Error("Acesso negado: usuário não é administrador");
-    }
-
-    // Gere um token JWT com as informações do usuário
-    const token = jwt.sign(
-      { id: findUser.id, isAdmin: findUser.isAdmin },
-      process.env.JWT_SECRET,
-      { expiresIn: "1d" }
-    );
-
-    return token;
-  } catch (error) {
-    console.error("Erro no login do administrador:", error);
-    throw new Error("Erro ao fazer login: " + error.message);
+  if (!findUser) {
+    throw new Error("Usuário ou senha não encontrado");
   }
+
+  const isValidPassword = await bcrypt.compare(senha, findUser.senha);
+  if (!isValidPassword) {
+    throw new Error("Usuário ou senha não encontrado");
+  }
+
+  if (!findUser.isAdmin) {
+    throw new Error("Acesso negado: usuário não é administrador");
+  }
+
+  const token = jwt.sign(
+    { id: findUser.id, isAdmin: findUser.isAdmin },
+    process.env.JWT_SECRET,
+    { expiresIn: "1d" }
+  );
+
+  return token;
 };
 
+// Buscar grupo por ID
 export const getGroupByID = async (id) => {
-  const grupo = await Group.findByPk(id);
+  const grupo = await prisma.group.findUnique({
+    where: { id },
+  });
 
   if (!grupo) {
     throw new Error("Grupo não encontrado");
@@ -64,21 +74,34 @@ export const getGroupByID = async (id) => {
   return grupo;
 };
 
+// Atualizar grupo
 export const updateGrupo = async (id, data) => {
-  await Group.update(data, { where: { id } });
-  const grupo = await Group.findByPk(id);
+  const grupo = await prisma.group.update({
+    where: { id },
+    data,
+  });
   return grupo;
 };
 
+// Deletar grupo
 export const deleteGrupo = async (id) => {
-  const grupo = await Group.destroy({ where: { id } });
-  if (!grupo) {
-    throw new Error("Grupo não encontrado");
-  }
-  return grupo; // Retornar o grupo deletado
+  const grupo = await prisma.group.delete({
+    where: { id },
+  });
+  return grupo;
 };
 
+// Buscar todos os grupos
 export const getAllGroups = async () => {
-  const grupos = await Group.findAll({ attributes: { exclude: ["senha"] } });
+  const grupos = await prisma.group.findMany({
+    select: {
+      id: true,
+      nome: true,
+      email: true,
+      telefone: true,
+      isAdmin: true,
+      ImgPerfil: true,
+    },
+  });
   return grupos;
 };

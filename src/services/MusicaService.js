@@ -1,38 +1,48 @@
-import Musica from "../models/MusicModel.js";
+import prisma from "../../prisma/prismaClient.js";
 
-//Cadastrar uma nova Musica
+// Cadastrar uma nova Musica
 export const createMusic = async (data) => {
-  const newMusic = await Musica.create(data);
+  const newMusic = await prisma.musica.create({
+    data,
+  });
   return newMusic;
 };
 
-//Pegar uma Musica pelo Id
+// Pegar uma Musica pelo Id
 export const getMusicById = async (idMusic) => {
-  const music = await Musica.findByPk(idMusic);
+  const music = await prisma.musica.findUnique({
+    where: { id: idMusic },
+  });
   return music;
 };
 
-//Pegar todas as musicas cadastradas
+// Pegar todas as Musicas cadastradas
 export const getAllMusic = async () => {
-  const music = await Musica.findAll();
+  const music = await prisma.musica.findMany();
   return music;
 };
 
-//Pegar todas as musicas pelo Id do Grupo
+// Pegar todas as Musicas pelo Id do Grupo
 export const getAllMusicByGroup = async (idGroup) => {
-  const music = await Musica.findAll({ where: { grupo: idGroup } });
+  const music = await prisma.musica.findMany({
+    where: { grupoId: idGroup },
+  });
   return music;
 };
 
-//Atualizar uma Musica
+// Atualizar uma Musica
 export const updateMusic = async (idMusic, data) => {
-  await Musica.update(data, { where: { id: idMusic } });
-  const music = await Musica.findByPk(idMusic);
+  const music = await prisma.musica.update({
+    where: { id: idMusic },
+    data,
+  });
   return music;
 };
 
-//Deletar uma Musica
+// Deletar uma Musica
 export const deleteMusic = async (idMusic) => {
-  const music = await Musica.destroy({ where: { id: idMusic } });
+  const music = await prisma.musica.delete({
+    where: { id: idMusic },
+  });
   return music;
 };

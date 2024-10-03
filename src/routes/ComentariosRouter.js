@@ -33,7 +33,7 @@ commentarioRouter.get(
 //Rota para pegar um comentario pelo id
 
 commentarioRouter.get(
-  "/:idComentario",
+  "/all/:idComentario",
   authenticateUser,
   getComentarioByIdController
 );

@@ -37,6 +37,10 @@ musicasRouter.get("/:id", authenticateUser, getMusicByIdController);
 
 // Rota para buscar todas as musicas do grupo
 
-musicasRouter.get("/grupo/:id", authenticateUser, getAllMusicByGroupController);
+musicasRouter.get(
+  "/:id/musica",
+  authenticateUser,
+  getAllMusicByGroupController
+);
 
 export default musicasRouter;
