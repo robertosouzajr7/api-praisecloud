@@ -16,28 +16,33 @@ export const createMensalidadeController = async (req, res) => {
 //Controller de Buscar mensalidade por ID
 
 export const getMensalidadeByIDController = async (req, res) => {
-  const mensalidade = await getMensalidadeById(req.params.id);
+  const { idMensalidade } = req.params;
+  const mensalidade = await getMensalidadeById(idMensalidade);
   res.status(200).json(mensalidade);
 };
 
 //Controller de Atualizar mensalidade
 
 export const updateMensalidadeController = async (req, res) => {
-  const mensalidade = await updateMensalidade(req.params.id, req.body);
+  const { idMensalidade } = req.params;
+  const mensalidade = await updateMensalidade(idMensalidade, req.body);
   res.status(200).json(mensalidade);
 };
 
 //Controller de Deletar mensalidade
 
 export const deleteMensalidadeController = async (req, res) => {
-  const mensalidade = await deleteMensalidade(req.params.id);
+  const { idMensalidade } = req.params;
+
+  const mensalidade = await deleteMensalidade(idMensalidade);
   res.status(200).json(mensalidade);
 };
 
 //Controller de Buscar mensalidade por grupo
 
 export const getMensalidadeByGrupoController = async (req, res) => {
-  const mensalidade = await getAllMensalidadesByGroup(req.params.id);
+  const { idMensalidade } = req.params;
+  const mensalidade = await getAllMensalidadesByGroup(idMensalidade);
   res.status(200).json(mensalidade);
 };
 

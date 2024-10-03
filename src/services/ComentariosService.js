@@ -1,10 +1,44 @@
 import prisma from "../../prisma/prismaClient.js";
 
 // Cadastrar um novo comentário
+
 export const createComentario = async (data) => {
-  const newComentario = await prisma.comentario.create({
-    data,
+  const { descricao, postId, grupoId, autorId } = data;
+
+  // Verificar se o autor (membro) existe
+  const autor = await prisma.member.findUnique({
+    where: { id: autorId },
   });
+  if (!autor) {
+    throw new Error("Autor (Membro) não encontrado");
+  }
+
+  // Verificar se o post existe
+  const post = await prisma.post.findUnique({
+    where: { id: postId },
+  });
+  if (!post) {
+    throw new Error("Post não encontrado");
+  }
+
+  // Verificar se o grupo existe
+  const grupo = await prisma.group.findUnique({
+    where: { id: grupoId },
+  });
+  if (!grupo) {
+    throw new Error("Grupo não encontrado");
+  }
+
+  // Criar o comentário
+  const newComentario = await prisma.comentario.create({
+    data: {
+      descricao,
+      postId,
+      grupoId,
+      autorId,
+    },
+  });
+
   return newComentario;
 };
 
@@ -18,10 +52,17 @@ export const getAllComentariosByGroupID = async (idGrupo) => {
 
 // Buscar um comentário pelo Id
 export const getComentarioById = async (idComentario) => {
-  const comentario = await prisma.comentario.findUnique({
+  console.log(idComentario);
+  /* const comentario = await prisma.comentario.findUnique({
     where: { id: idComentario },
+    include: {
+      autor: true,
+      post: true,
+      grupo: true,
+    },
   });
-  return comentario;
+  console.log(comentario); */
+  return idComentario;
 };
 
 // Atualizar um comentário

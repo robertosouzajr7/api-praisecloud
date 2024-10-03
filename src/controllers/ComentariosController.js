@@ -43,7 +43,9 @@ export const getAllComentariosByGroupIDController = async (req, res) => {
 
 export const getComentarioByIdController = async (req, res) => {
   try {
-    const comentario = await getComentarioById(req.params.idComentario);
+    const { idComentario } = req.params;
+    console.log(idComentario);
+    const comentario = await getComentarioById(idComentario);
     res.status(200).json(comentario);
   } catch (error) {
     res.status(400).json({ message: error.message });

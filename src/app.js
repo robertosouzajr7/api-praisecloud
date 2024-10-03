@@ -33,8 +33,10 @@ app.use("/kit", kitRouter);
 app.use("/kits", kitRouter);
 app.use("/mensalidade", mensalidadesRouter);
 app.use("/comentario", commentarioRouter);
+app.use("/coment", commentarioRouter);
 app.use("/post", postRouter);
 app.use("/musica", musicasRouter);
+app.use("/musicas", musicasRouter);
 app.use("/agenda", agendaRouter);
 
 const PORT = process.env.PORT || 5000;
