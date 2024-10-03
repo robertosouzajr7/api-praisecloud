@@ -52,17 +52,10 @@ export const getAllComentariosByGroupID = async (idGrupo) => {
 
 // Buscar um comentário pelo Id
 export const getComentarioById = async (idComentario) => {
-  console.log(idComentario);
-  /* const comentario = await prisma.comentario.findUnique({
+  const comentario = await prisma.comentario.findUnique({
     where: { id: idComentario },
-    include: {
-      autor: true,
-      post: true,
-      grupo: true,
-    },
   });
-  console.log(comentario); */
-  return idComentario;
+  return comentario;
 };
 
 // Atualizar um comentário
