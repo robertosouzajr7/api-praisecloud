@@ -7,9 +7,9 @@
   "scripts": {
     "start": "node src/app.js",
     "dev": "nodemon src/app.js",
-    "sequelize": "sequelize",
-    "migrate": "sequelize --config sequelize.config.js db:migrate",
-    "seed": "sequelize --config sequelize.config.js db:seed:all"
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev --name init",
+    "prisma:deploy": "prisma migrate deploy"
   },
   "dependencies": {
     "@prisma/client": "^5.20.0",
