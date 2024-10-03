@@ -1,7 +1,0 @@
-const path = require("path");
-module.exports = {
-  config: path.resolve("src/config", "database.js"), // caminho para o arquivo de configuração do banco de dados
-  "models-path": path.resolve("src/models"), // caminho para os modelos
-  "seeders-path": path.resolve("src/seeders"), // caminho para os seeders
-  "migrations-path": path.resolve("src/migrations"), // caminho para as migrations
-};
