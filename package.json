@@ -7,10 +7,10 @@
   "scripts": {
     "start": "node src/app.js",
     "dev": "nodemon src/app.js",
-    "build": "npm run prisma:generate && npm run prisma:deploy",
+    "build": "npm run prisma:generate && npm run prisma:deploy && your-build-command",
     "prisma:generate": "prisma generate",
     "prisma:deploy": "prisma migrate deploy",
-    "vercel-build": "npx prisma migrate deploy"
+    "vercel-build": "npm run prisma:generate"
   },
   "dependencies": {
     "@prisma/client": "^5.20.0",
