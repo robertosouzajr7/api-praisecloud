@@ -3,11 +3,11 @@
 /.vscode/
 
 # Ignorar diretórios de dependências
-/node_modules/
+node_modules
 /vendor/
 
 # Ignorar arquivos de configuração sensíveis
-/.env
+.env
 /config.js
 
 # Ignorar arquivos de log
