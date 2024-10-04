@@ -20,7 +20,8 @@
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.4.3",
-    "praisecloud": "file:"
+    "praisecloud": "file:",
+    "vercel": "^37.6.1"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
