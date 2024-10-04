@@ -39,7 +39,7 @@ JWT_SECRET="sua_chave_secreta"
 # Outras variáveis de ambiente podem ser adicionadas conforme necessário.
 4. Rodar as migrações do Prisma
 Depois de configurar o banco de dados, aplique as migrações para criar as tabelas necessárias.
-npx prisma migrate dev --name init
+npx prisma migrate dev --name init novo
 
 
 Se estiver em um ambiente de produção, use:
